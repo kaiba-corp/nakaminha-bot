@@ -1,47 +1,55 @@
-# https://github.com/Rapptz/discord.py/blob/async/examples/reply.py
 import discord
 import random
 import datetime
+import json
 
 # token
 TOKEN = 'NDMzMjc2MDY3NDk1NTQyNzg0.WszNyA.itRFDiJXEd8d2XJVn6Q4wBGmq_Y'
 
 # variaveis
 cargo_de_ponto = "Classe Operária"
-pontos_batidos = []
+cargo_de_bot = "Aliens"
+pontos_batidos = None
+
+# carrega configuracoes dos arquivos
+def read_config():
+	global pontos_batidos
+	with open('pontos_batidos.txt', 'r') as file:
+		pontos_batidos = json.load(file)
+
+# saudacoes
 greets = ["Eae, {}", "Tranquilo, {}?", "De buenas, {}?", "Salve meu rei.", "No que posso te ajudar, {}?", "Como vai, {}?"]
 
 # cliente
 client = discord.Client()
 
-
 # actions
 @client.event
 async def on_message(message):
-	# we do not want the bot to reply to itself
-	if message.author == client.user:
+
+	# impede que um bot fale com outro, util por enquanto
+	cargos = [role.name for role in message.author.roles]
+	if cargo_de_bot in cargos:
 		return
 
 	if message.content == "!ponto":
 		
-		msg = ""
-
 		if str(message.channel) != "relógio-de-ponto":
-			msg += "Usar a sala relógio-de-ponto para bater o ponto.\n"
+			msg = "Usar a sala relógio-de-ponto para bater o ponto.\n"
 			await message.channel.send(msg)
 			return
 	
 		cargos = [c.name for c in message.author.roles]
 		if cargo_de_ponto not in cargos:
-			msg += "Você não faz parte da Classe Operária.\n"
+			msg = "Você não faz parte da Classe Operária.\n"
 			await message.channel.send(msg)
 			return
-		if (message.author.name) == "cTRLLL":
-			msg += "cuzão\n"
 		
 		data = datetime.datetime.now()  # Some datetime object.
+		msg = "Data: [{}]\n".format(data.strftime('%d/%m/%Y'))
 
-		msg += "Data: [{}]\n".format(data.strftime('%d/%m/%Y'))
+		if (message.author.name) == "cTRLLL":
+			msg += "cuzão\n"
 		
 		for ponto in pontos_batidos:
 			
@@ -64,8 +72,9 @@ async def on_message(message):
 		await message.channel.send(msg)
 		return
 	
-	if 'tamujunto' or 'tmj' or 'tamo junto' or 'tamojunto' in message.content:
-		msg = ":tamujunto:"
+	tamujunto = ['tamujunto', 'tmj', 'tamo junto', 'tamojunto']
+	if tamujunto in message.content:
+		msg = "<:tamujunto:833685622803791922>"
 		await message.channel.send(msg)
 		return
 		
@@ -74,6 +83,8 @@ async def on_message(message):
 		await message.channel.send(msg)
 		return
 
+	
+
 @client.event
 async def on_ready():
 	print('Logged in as')
@@ -81,4 +92,5 @@ async def on_ready():
 	print(client.user.id)
 	print('------')
 
+read_config()
 client.run(TOKEN)
