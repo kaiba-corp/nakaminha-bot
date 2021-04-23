@@ -27,30 +27,30 @@ async def on_message(message):
 		msg = ""
 
 		if str(message.channel) != "relógio-de-ponto":
-			msg += "Usar a sala relógio-de-ponto para bater o ponto."
+			msg += "Usar a sala relógio-de-ponto para bater o ponto.\n"
 			await message.channel.send(msg)
 			return
 	
 		cargos = [c.name for c in message.author.roles]
 		if cargo_de_ponto not in cargos:
-			msg += "Você não faz parte da Classe Operária."
+			msg += "Você não faz parte da Classe Operária.\n"
 			await message.channel.send(msg)
 			return
 
 		data = datetime.datetime.now()  # Some datetime object.
 
-		msg += "\nData: [{}]".format(data.strftime('%d/%m/%Y'))
+		msg += "Data: [{}]\n".format(data.strftime('%d/%m/%Y'))
 		
 		for ponto in pontos_batidos:
 			
 			if (message.author.name) == "cTRLLL":
-				msg += "cuzao\n"
+				msg += "cuzão\n"
 
 			if (ponto["id"] == message.author.id and ponto["horario_entrada"]):
 				ponto["horario_saida"] = data
-				msg += "\nHorário de entrada: {}".format(ponto["horario_entrada"].strftime('%H:%M'))
-				msg += "\nHorário de saida: {}".format(data.strftime('%H:%M'))
-				msg += "\nPonto batido! Bom descanso!"
+				msg += "Horário de entrada: {}]\n".format(ponto["horario_entrada"].strftime('%H:%M'))
+				msg += "Horário de saida: {}\n".format(data.strftime('%H:%M'))
+				msg += "Ponto batido! Bom descanso!\n"
 				pontos_batidos.remove(ponto)
 				await message.channel.send(msg)
 				return
@@ -60,8 +60,13 @@ async def on_message(message):
 		ponto["horario_entrada"] = data
 		pontos_batidos.append(ponto)
 		
-		msg += "\nHorário de entrada: {}".format(data.strftime('%H:%M'))
-		msg += "\nPonto batido! Bom serviço campeão!"
+		msg += "Horário de entrada: {}\n".format(data.strftime('%H:%M'))
+		msg += "Ponto batido! Bom serviço campeão!\n"
+		await message.channel.send(msg)
+		return
+	
+	if 'tamujunto' or 'tmj' or 'tamo junto' or 'tamojunto' in message.content:
+		msg = ":tamujunto:"
 		await message.channel.send(msg)
 		return
 		
