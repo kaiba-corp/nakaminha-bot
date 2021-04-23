@@ -36,16 +36,15 @@ async def on_message(message):
 			msg += "Você não faz parte da Classe Operária.\n"
 			await message.channel.send(msg)
 			return
-
+		if (message.author.name) == "cTRLLL":
+			msg += "cuzão\n"
+		
 		data = datetime.datetime.now()  # Some datetime object.
 
 		msg += "Data: [{}]\n".format(data.strftime('%d/%m/%Y'))
 		
 		for ponto in pontos_batidos:
 			
-			if (message.author.name) == "cTRLLL":
-				msg += "cuzão\n"
-
 			if (ponto["id"] == message.author.id and ponto["horario_entrada"]):
 				ponto["horario_saida"] = data
 				msg += "Horário de entrada: {}]\n".format(ponto["horario_entrada"].strftime('%H:%M'))
